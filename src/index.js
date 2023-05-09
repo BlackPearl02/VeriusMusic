@@ -1,9 +1,13 @@
 import {} from 'dotenv/config';
 import fs from 'fs';
-import Discord from 'discord.js';
 import { Client, GatewayIntentBits } from 'discord.js';
+import { DisTube } from 'distube';
+import { SpotifyPlugin } from '@distube/spotify';
+import * as functions from './functions/handlers/handleEvents.js';
+import mongoose from 'mongoose';
 
 // Create a new Client with the Guilds intent
+
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -13,36 +17,32 @@ const client = new Client({
   ],
 });
 
-client.on('ready', async () => {
-  console.log(`Logged in as ${client.user.tag}!`);
-  async function pingOnNewMessage(channelId, autorId, userId) {
-    const channel = await client.channels.fetch(channelId);
-    let lastMessageTime = null;
-    // Listen for new messages in the channel
-    client.on('messageCreate', (message) => {
-      // If the message was sent by the specified user and is not a bot message
-      if (message.author.id === autorId && !message.author.bot) {
-        // If this is the first message or enough time has elapsed since the last message
-        if (
-          lastMessageTime === null ||
-          message.createdTimestamp - lastMessageTime > 5000
-        ) {
-          // Ping the user by mentioning them in the channel
-          channel.send(`<@${userId}> New message received!`);
-        }
-        // Record the time of the current message
-        lastMessageTime = message.createdTimestamp;
-      }
-    });
+//handle events
+const functionFolders = fs
+  .readdirSync('./src/functions', {
+    withFileTypes: true,
+  })
+  .filter((dirent) => dirent.isDirectory());
+for (const folder of functionFolders) {
+  const functionFiles = fs
+    .readdirSync(`./src/functions/${folder.name}`)
+    .filter((file) => file.endsWith('.js'));
+
+  for (const file of functionFiles) {
+    await import(`./functions/${folder.name}/${file}`);
   }
-  pingOnNewMessage(
-    '673546224179216446',
-    '444051772290498561',
-    '972095477355020308'
-  );
+}
+//Music bot
+client.distube = new DisTube(client, {
+  leaveOnStop: false,
+  emitNewSongOnly: true,
+  emitAddSongWhenCreatingQueue: false,
+  emitAddListWhenCreatingQueue: false,
+  plugins: [new SpotifyPlugin({ emitEventsAfterFetching: true })],
 });
 
-// Login with the environment data
-await client.login(process.env.BOT_TOKEN);
+client.login(process.env.BOT_TOKEN);
+functions.handleEvents(client);
 
-export default client;
+//export data
+export { client, mongoose, fs, functions };
