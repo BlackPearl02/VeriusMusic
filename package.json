@@ -1,0 +1,27 @@
+{
+  "name": "veriusbot",
+  "version": "2.0.0",
+  "description": "Bot for verius server",
+  "main": "./src/index.js",
+  "keywords": [],
+  "author": "Rafał Szołtysik",
+  "license": "",
+  "scripts": {
+    "start:dev": "nodemon ./src/index.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.7.1",
+    "dotenv": "^16.0.3",
+    "fs": "^0.0.1-security",
+    "node.js": "^0.0.1-security"
+  },
+  "imports": {
+    "#events/*": "./src/events/*",
+    "#commands/*": "./src/commands/*.js"
+  },
+  "type": "module",
+  "devDependencies": {
+    "nodemon": "^2.0.20",
+    "prettier": "^2.8.2"
+  }
+}
