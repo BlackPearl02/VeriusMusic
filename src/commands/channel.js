@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from 'discord.js';
+import { SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';
 import Config from '../schemas/guildConfig.js';
 import * as functions from '../functions/functions.js';
 import { ChannelType } from 'discord.js';
@@ -12,7 +12,8 @@ const create = () => {
         .setName('channel')
         .setDescription('Specify in wich channel you can write commands')
         .addChannelTypes(ChannelType.GuildText)
-    );
+    )
+    .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels);
 
   return command.toJSON();
 };
@@ -25,22 +26,21 @@ const invoke = async (interaction) => {
   //get user input
   const channel = interaction.options.getChannel('channel');
 
-  if (!interaction.member.permissions.has(PermissionFlagsBits.MenageChannels)) {
+  if (!interaction.member.permissions.has(PermissionFlagsBits.ManageChannels)) {
     const msg = await interaction.channel.send({
-      content: 'You are not allowed to change the channel for bot commands !',
+      content: 'Nie masz uprawnień aby zmienić kanał',
     });
     functions.del(msg);
     return;
   }
   //update config for channel in database
-  Config.findOneAndUpdate(
-    { guildId: interaction.guild.id },
-    { channel: channel },
-    (err) => {
-      if (err) {
-        console.log(err);
-      }
-    }
-  );
+  try {
+    await Config.findOneAndUpdate(
+      { guildId: interaction.guild.id },
+      { channel: channel.id }
+    );
+  } catch (err) {
+    console.log(err);
+  }
 };
 export { create, invoke };

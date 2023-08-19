@@ -6,11 +6,14 @@ import * as functions from '../functions/functions.js';
 const create = () => {
   const command = new SlashCommandBuilder()
     .setName('play')
-    .setDescription('Play a song')
+    .setDescription('Puść piosenke')
     .addStringOption((option) =>
       option
         .setName('search')
-        .setDescription('Put here key words or link to music you want to hear')
+        .setDescription(
+          'Podaj słowa kluczowe bądź URL piosenki którą chcesz usłyszeć'
+        )
+        .setRequired(true)
     );
 
   return command.toJSON();
@@ -18,23 +21,22 @@ const create = () => {
 
 // Called by the interactionCreate event listener when the corresponding command is invoked
 const invoke = async (interaction) => {
+  //get input form user
   const string = interaction.options.getString('search');
   const authorVoiceChannelId = interaction.member.voice.channel;
+  //reply to command
   functions.reply(interaction);
-  if (!string) {
-    const msg = await interaction.channel.send({
-      content: 'Please enter a song url or query to search.',
-    });
-    functions.del(msg);
-    return;
-  }
+
+  //play music based on input data
   client.distube
     .play(authorVoiceChannelId, string, {
       member: interaction.member,
       textChannel: interaction.channel,
     })
-    .catch(async (e) => {
-      interaction.reply({ content: `${e}`, ephemeral: true });
+    //catch errors and send it to channel
+    .catch(async (err) => {
+      interaction.reply({ content: `${err}`, ephemeral: true });
+      console.log(err);
     });
 };
 

@@ -2,13 +2,13 @@ import Guild from '../../schemas/guild.js';
 import mongoose from 'mongoose';
 //fetch all guilds
 export async function allGuilds(guild) {
-  //   const allGuilds = client.guilds.cache.map((guild) => guild);
+  //const allGuilds = client.guilds.cache.map((guild) => guild);
   //get all guilds data
   let guildProfile = await Guild.findOne({ guildId: guild.id });
   //if guild is not created create new one
   if (!guildProfile || guildProfile === null) {
     guildProfile = new Guild({
-      _id: mongoose.Types.ObjectId(),
+      _id: new mongoose.Types.ObjectId(),
       guildId: `${guild.id}`,
       guildName: `${guild.name}`,
       guildIcon: `${guild.iconURL()}` ? `${guild.iconURL()}` : 'None',

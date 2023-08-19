@@ -18,6 +18,10 @@ async function invoke(interaction) {
       return (await import(`#commands/${interaction.commandName}`)).invoke(
         interaction
       );
+    } else if (config[0].channel === null) {
+      return (await import(`#commands/${interaction.commandName}`)).invoke(
+        interaction
+      );
     }
   }
 }

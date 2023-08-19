@@ -5,6 +5,8 @@ import { DisTube } from 'distube';
 import { SpotifyPlugin } from '@distube/spotify';
 import * as functions from './functions/handlers/handleEvents.js';
 import mongoose from 'mongoose';
+import axios from 'axios';
+import twitchStream from './api/twitchApi/twitchStream.js';
 
 // Create a new Client with the Guilds intent
 
@@ -41,8 +43,45 @@ client.distube = new DisTube(client, {
   plugins: [new SpotifyPlugin({ emitEventsAfterFetching: true })],
 });
 
+//TwichApi login
+
+const getToken = async () => {
+  return await axios
+    .post('https://id.twitch.tv/oauth2/token', {
+      client_id: process.env.TWITCH_ID,
+      client_secret: process.env.TWITCH_TOKEN,
+      grant_type: 'client_credentials',
+    })
+    .then((res) => {
+      //get TwitchApi token
+      const accessToken = res.data.access_token;
+      const refresh = res.data.expires_in;
+      return { accessToken, refresh };
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+};
+let gettoken = await getToken();
+let accessToken = gettoken.accessToken;
+let refresh = gettoken.refresh;
+setInterval(async () => {
+  gettoken = await getToken();
+}, refresh - (10 / 100) * refresh);
+//create connection to TwitchApi
+const twitchApi = axios.create({
+  baseURL: 'https://api.twitch.tv/helix',
+  headers: {
+    'Client-ID': process.env.TWITCH_ID,
+    Authorization: 'Bearer ' + accessToken,
+  },
+});
+
+setInterval(twitchStream, 600000);
+
+// Login with the environment data
 client.login(process.env.BOT_TOKEN);
 functions.handleEvents(client);
 
 //export data
-export { client, mongoose, fs, functions };
+export { client, mongoose, fs, functions, twitchApi };

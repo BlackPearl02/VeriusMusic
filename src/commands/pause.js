@@ -5,7 +5,7 @@ import * as functions from '../functions/functions.js';
 const create = () => {
   const command = new SlashCommandBuilder()
     .setName('pause')
-    .setDescription('Pause a song');
+    .setDescription('Zatrzymaj piosenke');
 
   return command.toJSON();
 };
@@ -14,26 +14,28 @@ const create = () => {
 const invoke = async (interaction) => {
   const queue = client.distube.getQueue(interaction);
   functions.reply(interaction);
-
+  //check if something is in queue
   if (!queue) {
     const msg = await interaction.channel.send({
-      content: 'There is nothing in the queue right now!',
+      content: 'Aktulnie nie ma nic w kolejce!',
     });
     functions.del(msg);
     return;
   }
+  //check if music is poused and then resume
   if (queue.paused) {
     queue.resume();
     const msg = await interaction.channel.send({
-      content: 'Resumed the song for you',
+      content: 'Piosenka wznowiona',
     });
     functions.del(msg);
     return;
   }
+  //pause queue
   queue.pause();
-
+  //send message and delete after time
   const msg = await interaction.channel.send({
-    content: 'Paused the song for you',
+    content: 'Muzyka została zatrzymana',
   });
   functions.del(msg);
   return;

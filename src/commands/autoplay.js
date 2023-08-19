@@ -7,7 +7,9 @@ import * as functions from '../functions/functions.js';
 const create = () => {
   const command = new SlashCommandBuilder()
     .setName('autoplay')
-    .setDescription('Decide if bot can autoplay');
+    .setDescription(
+      'Zdecyduj czy bot ma otwarzać automatycznie kolejne piosenki'
+    );
 
   return command.toJSON();
 };
@@ -29,7 +31,7 @@ const invoke = async (interaction) => {
   //check if is something is in queue
   if (!queue) {
     const msg = await interaction.channel.send({
-      content: 'There is nothing in the queue right now!',
+      content: 'Aktualnie nie ma nic w kolejce!',
     });
     //delete message after time
     functions.del(msg);
@@ -47,20 +49,19 @@ const invoke = async (interaction) => {
   });
 
   //update config for autoplay in database
-  Config.findOneAndUpdate(
-    { guildId: interaction.guild.id },
-    { autoplay: autoplay },
-    (err) => {
-      if (err) {
-        console.log(err);
-      }
-    }
-  );
+  try {
+    await Config.findOneAndUpdate(
+      { guildId: interaction.guild.id },
+      { autoplay: autoplay }
+    );
 
-  //delete message after time
-  functions.del(msg);
+    //delete message after time
+    functions.del(msg);
 
-  return;
+    return;
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 export { create, invoke };

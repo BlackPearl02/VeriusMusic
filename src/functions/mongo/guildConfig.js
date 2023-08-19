@@ -9,7 +9,7 @@ export async function config(guild) {
   //if guild config is not created create new one
   if (!ConfigProfile || ConfigProfile === null) {
     ConfigProfile = new Config({
-      _id: mongoose.Types.ObjectId(),
+      _id: new mongoose.Types.ObjectId(),
       guildId: `${guild.id}`,
     });
     await ConfigProfile.save().catch(console.err);

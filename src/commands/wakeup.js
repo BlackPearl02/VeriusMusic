@@ -6,11 +6,11 @@ import Config from '../schemas/guildConfig.js';
 const create = () => {
   const command = new SlashCommandBuilder()
     .setName('wakeup')
-    .setDescription('Wake up somebody throwing him beetwen channels!')
+    .setDescription('Obudź kogoś rzucająć go pomiędzy kanałami')
     .addUserOption((option) =>
       option
         .setName('user')
-        .setDescription('Mention a user which you want wake up')
+        .setDescription('Podaj kogo chesz obudzić')
         .setRequired(true)
     );
 
@@ -32,7 +32,7 @@ const invoke = async (interaction) => {
   // Check if the user executing the command has the required permissions to do so
   if (!interaction.member.permissions.has(PermissionFlagsBits.MoveMembers)) {
     const msg = await interaction.channel.send({
-      content: 'You are not allowed to delete messages!',
+      content: 'Nie masz uprawnień do przenoszenia użytkowników',
     });
     functions.del(msg);
     return;
@@ -40,7 +40,7 @@ const invoke = async (interaction) => {
 
   if (!interaction.appPermissions.has(PermissionFlagsBits.MoveMembers)) {
     const msg = await interaction.channel.send({
-      content: 'I am not allowed to delete messages!',
+      content: 'Nie mogę przenosić użytkowników',
     });
     functions.del(msg);
     return;
@@ -48,7 +48,7 @@ const invoke = async (interaction) => {
 
   if (authorVoiceChannelId !== memberVoiceChannel) {
     const msg = await interaction.channel.send({
-      content: 'User must be in this same channel as you',
+      content: 'Użytkownik musi być na tym samym kanale co ty!',
     });
     functions.del(msg);
     return;
@@ -63,7 +63,7 @@ const invoke = async (interaction) => {
         i++;
       } else {
         const msg = await interaction.channel.send({
-          content: 'User disconnected while waking up',
+          content: 'Użytkownik wyszedł podczas budzenia',
         });
         functions.del(msg);
         return;
@@ -71,9 +71,9 @@ const invoke = async (interaction) => {
     }
     member.voice.setChannel(authorVoiceChannelId);
     await interaction.channel.send({
-      content: `${
-        interaction.user
-      } Try to wake up ${interaction.options.getUser('user')}`,
+      content: `${interaction.user} Obudź się ${interaction.options.getUser(
+        'user'
+      )}!`,
     });
     return;
   }

@@ -1,21 +1,15 @@
-import { PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import { SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';
 import Config from '../schemas/guildConfig.js';
 import * as functions from '../functions/functions.js';
-import { ChannelType } from 'discord.js';
 // Creates an Object in JSON with the data required by Discord's API to create a SlashCommand
 const create = () => {
   const command = new SlashCommandBuilder()
-    .setName('pingchannel')
-    .setDescription(
-      'Podaj kanał na który ma być przenoszony pingowany użytkownik'
+    .setName('maxwarns')
+    .setDescription('Podaj liczbe warnów po których będzie przyznany ban')
+    .addNumberOption((option) =>
+      option.setName('number').setDescription('Podaj liczbe').setMinValue(1)
     )
-    .addChannelOption((option) =>
-      option
-        .setName('channel')
-        .setDescription('Wybierz konkretny kanał')
-        .addChannelTypes(ChannelType.GuildVoice)
-    )
-    .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels);
+    .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild);
 
   return command.toJSON();
 };
@@ -26,16 +20,16 @@ const invoke = async (interaction) => {
   functions.reply(interaction);
 
   //get user input
-  const channel = interaction.options.getChannel('channel');
+  const number = interaction.options.getNumber('number');
 
   //update config for channel in database
   try {
     await Config.findOneAndUpdate(
       { guildId: interaction.guild.id },
-      { pingChannel: channel.id }
+      { maxWarns: number }
     );
-  } catch (err) {
-    console.log(err);
+  } catch (e) {
+    console.log(e);
   }
 };
 export { create, invoke };

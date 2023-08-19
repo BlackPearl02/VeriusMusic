@@ -24,7 +24,7 @@ const invoke = async (interaction) => {
   const user = interaction.options.getUser('member');
   const member = await interaction.guild.members.fetch(user.id);
   const author = interaction.user;
-  // Check if the bot executing the command has the required permissions to do so
+  //check if the bot executing the command has the required permissions to do so
   if (!interaction.appPermissions.has(PermissionFlagsBits.KickMembers)) {
     await interaction.reply({
       content: 'Nie mam permisji do wyrzucenia użytkowników',
@@ -33,7 +33,7 @@ const invoke = async (interaction) => {
     setTimeout(() => interaction.deleteReply(), 60000);
     return;
   }
-  //Check if the user want to kick other user with higer role
+  //check if the user want to kick other user with higer role
   if (
     member.roles.highest.position >= interaction.member.roles.highest.position
   ) {
@@ -44,7 +44,7 @@ const invoke = async (interaction) => {
     setTimeout(() => interaction.deleteReply(), 60000);
     return;
   }
-  //Check if user want to kick bot
+  //check if user want to kick bot
   if (member.id === '972095477355020308') {
     interaction.reply({
       content: 'Nie moge wyrzucić sam siebie',
@@ -53,7 +53,9 @@ const invoke = async (interaction) => {
     setTimeout(() => interaction.deleteReply(), 60000);
     return;
   }
+  //kick a user
   await member.kick(reason);
+  //send information about kick
   return interaction.reply(
     `${author} pomyślnie wyrzucił ${user} z powodu ${reason}`
   );

@@ -6,7 +6,7 @@ import * as functions from '../functions/functions.js';
 const create = () => {
   const command = new SlashCommandBuilder()
     .setName('resume')
-    .setDescription('Resume a song');
+    .setDescription('Wznów piosenkę');
 
   return command.toJSON();
 };
@@ -15,22 +15,24 @@ const create = () => {
 const invoke = async (interaction) => {
   const queue = client.distube.getQueue(interaction);
   functions.reply(interaction);
+  //check if it is something in queue
   if (!queue) {
     const msg = await interaction.channel.send({
-      content: 'It is nothing in queue',
+      content: 'Aktualnie nie ma nic w kolejce!',
     });
     functions.del(msg);
     return;
   }
+  //check if queue is paused
   if (queue.paused) {
     queue.resume();
     const msg = await interaction.channel.send({
-      content: 'Resumed the song for you :)',
+      content: 'Piosenka została wznowiona',
     });
     functions.del(msg);
   } else {
     const msg = await interaction.channel.send({
-      content: 'The queue is not paused!',
+      content: 'Kolejka nie jest zatrzymana!',
     });
     functions.del(msg);
   }

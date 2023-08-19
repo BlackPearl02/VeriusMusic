@@ -6,11 +6,11 @@ import * as functions from '../functions/functions.js';
 const create = () => {
   const command = new SlashCommandBuilder()
     .setName('volume')
-    .setDescription('Set music volume')
+    .setDescription('Ustaw głośność')
     .addNumberOption((option) =>
       option
         .setName('volume_number')
-        .setDescription('Set volume number')
+        .setDescription('Wpisz liczbę od 0-100')
         .setRequired(true)
         .setMaxValue(100)
         .setMinValue(0)
@@ -51,18 +51,17 @@ const invoke = async (interaction) => {
 
   //send message with volume
   interaction.channel.send({
-    content: `Volume set to \`${volume}\``,
+    content: `Głośność ustawiona na \`${volume}\``,
   });
-
-  Config.findOneAndUpdate(
-    { guildId: interaction.guild.id },
-    { volume: volume },
-    (err) => {
-      if (err) {
-        console.log(err);
-      }
-    }
-  );
+  //updata data in database
+  try {
+    await Config.findOneAndUpdate(
+      { guildId: interaction.guild.id },
+      { volume: volume }
+    );
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export { create, invoke };

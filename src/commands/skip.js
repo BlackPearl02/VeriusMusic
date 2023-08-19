@@ -5,7 +5,7 @@ import * as functions from '../functions/functions.js';
 const create = () => {
   const command = new SlashCommandBuilder()
     .setName('skip')
-    .setDescription('Skip a song');
+    .setDescription('Pomiń piosenkę');
 
   return command.toJSON();
 };
@@ -14,6 +14,7 @@ const create = () => {
 const invoke = async (interaction) => {
   const queue = client.distube.getQueue(interaction);
   functions.reply(interaction);
+  //check if it is something in queue
   if (!queue) {
     const msg = await interaction.channel.send({
       content: 'There is nothing in the queue right now!',
@@ -21,10 +22,11 @@ const invoke = async (interaction) => {
     functions.del(msg);
     return;
   }
+  //skip a song and send message with new title
   try {
     const song = await queue.skip();
     const msg = await interaction.channel.send({
-      content: `Skipped! Now playing:\n${song.name}`,
+      content: `Pominięto! Aktuialnie leci:\n${song.name}`,
     });
     functions.del(msg);
     return;

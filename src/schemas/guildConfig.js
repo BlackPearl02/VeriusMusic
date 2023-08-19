@@ -6,5 +6,6 @@ const configSchema = new Schema({
   volume: { type: Number, default: 20 },
   channel: { type: String, default: null },
   pingChannel: { type: String, default: null },
+  maxWarns: { type: Number, default: 3 },
 });
 export default model('Config', configSchema, 'Configs');
