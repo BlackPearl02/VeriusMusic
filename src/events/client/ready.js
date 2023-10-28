@@ -29,7 +29,6 @@ async function invoke(client) {
       console.log(
         `Started refreshing ${commandsArray.length} application (/) commands.`
       );
-
       // The put method is used to fully refresh all commands in the guild with the current set
       const data = await rest.put(
         Routes.applicationCommands(process.env.CLIENT_ID),
@@ -39,6 +38,7 @@ async function invoke(client) {
       console.log(
         `Successfully reloaded ${data.length} application (/) commands.`
       );
+      await data.map((data) => console.log(data.name));
     } catch (error) {
       // And of course, make sure you catch and log any errors!
       console.error(error);
