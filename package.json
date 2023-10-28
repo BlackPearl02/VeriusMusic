@@ -12,11 +12,10 @@
   "license": "ISC",
   "imports": {
     "#events/*": "./src/events/*",
-    "#commands": "./src/commands/*.js"
+    "#commands/*": "./src/commands/*.js"
   },
   "dependencies": {
     "@discordjs/opus": "^0.9.0",
-    "npm": "^0.16.0",
     "@distube/spotify": "^1.5.1",
     "@distube/ytdl-core": "^4.11.17",
     "axios": "^1.4.0",
