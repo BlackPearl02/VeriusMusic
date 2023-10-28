@@ -30,7 +30,9 @@ for (const folder of functionFolders) {
     .filter((file) => file.endsWith('.js'));
 
   for (const file of functionFiles) {
-    await import(`./functions/${folder.name}/${file}`);
+    async () => {
+      await import(`./functions/${folder.name}/${file}`);
+    };
   }
 }
 //Music bot

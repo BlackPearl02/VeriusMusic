@@ -18,7 +18,7 @@ export async function handleEvents(client) {
     switch (folder.name) {
       case 'client':
         for (const file of eventFiles) {
-          const event = await import(`../../events/${folder.name}/${file}`);
+          const event = await import(`#events/${folder.name}/${file}`);
           if (event.once)
             client.once(event.name, (...args) => {
               event.invoke(...args);
@@ -31,7 +31,7 @@ export async function handleEvents(client) {
         break;
       case 'mongo':
         for (const file of eventFiles) {
-          const event = await import(`../../events/${folder.name}/${file}`);
+          const event = await import(`#events/${folder.name}/${file}`);
           if (event.once) {
             mongoose.connection.on(event.name, (...args) => {
               event.invoke(...args);
@@ -45,7 +45,7 @@ export async function handleEvents(client) {
         break;
       case 'distube':
         for (const file of eventFiles) {
-          const event = await import(`../../events/${folder.name}/${file}`);
+          const event = await import(`#events/${folder.name}/${file}`);
           if (event.once) {
             client.distube.on(event.name, (...args) => {
               event.invoke(...args);
