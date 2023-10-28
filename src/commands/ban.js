@@ -56,11 +56,16 @@ const invoke = async (interaction) => {
     setTimeout(() => interaction.deleteReply(), 60000);
     return;
   }
-  interaction.guild.members.ban(`${user.id}`);
-  const msg = await interaction.channel.send({
-    content: `Zbanowano:\n${user.tag}`,
-  });
-  functions.del(msg);
+  try {
+    await interaction.guild.members.ban(`${user.id}`);
+    const msg = await interaction.channel.send({
+      content: `Zbanowano:\n${user.tag}`,
+    });
+    functions.del(msg);
+  } catch (error) {
+    console.log(error);
+  }
+
   return;
 };
 export { create, invoke };

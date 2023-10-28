@@ -9,14 +9,14 @@
   },
   "type": "module",
   "author": "",
-  "license": "MIT",
+  "license": "ISC",
   "imports": {
     "#events/*": "./src/events/*",
-    "#commands/*": "./src/commands/*.js"
+    "#commands": "./src/commands/*.js"
   },
   "dependencies": {
     "@discordjs/opus": "^0.9.0",
-    "@discordjs/voice": "^0.16.0",
+    "npm": "^0.16.0",
     "@distube/spotify": "^1.5.1",
     "@distube/ytdl-core": "^4.11.17",
     "axios": "^1.4.0",
@@ -25,7 +25,6 @@
     "discord.js": "^14.11.0",
     "distube": "^4.0.4",
     "dotenv": "^16.1.4",
-    "git": "^0.1.5",
     "libsodium-wrappers": "^0.7.11",
     "mongoose": "^7.2.3",
     "nodemon": "^2.0.22"

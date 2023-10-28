@@ -7,7 +7,7 @@ const invoke = async (err) => {
     err = new ServerSelectionError();
     err.assimilateError(originalError);
   }
-  console.log(chalk.rgb(255, 0, 0)('[Database error]: ') + err);
+  throw console.log(chalk.rgb(255, 0, 0)('[Database error]: ') + err);
   let error;
   if ((err = 'MongooseServerSelectionError')) {
     error = 'Connection error';

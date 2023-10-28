@@ -7,5 +7,8 @@ const configSchema = new Schema({
   channel: { type: String, default: null },
   pingChannel: { type: String, default: null },
   maxWarns: { type: Number, default: 3 },
+  twitchChannel: { type: String, default: null },
+  twitchUsers: { type: String, default: null },
 });
+
 export default model('Config', configSchema, 'Configs');

@@ -54,11 +54,15 @@ const invoke = async (interaction) => {
     return;
   }
   //kick a user
-  await member.kick(reason);
-  //send information about kick
-  return interaction.reply(
-    `${author} pomyślnie wyrzucił ${user} z powodu ${reason}`
-  );
+  try {
+    await member.kick(reason);
+    //send information about kick
+    return interaction.reply(
+      `${author} pomyślnie wyrzucił ${user} z powodu ${reason}`
+    );
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export { create, invoke };

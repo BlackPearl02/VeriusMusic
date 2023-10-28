@@ -31,14 +31,18 @@ const invoke = async (interaction) => {
     functions.del(msg);
     return;
   }
-  //pause queue
-  queue.pause();
-  //send message and delete after time
-  const msg = await interaction.channel.send({
-    content: 'Muzyka została zatrzymana',
-  });
-  functions.del(msg);
-  return;
+  try {
+    //pause queue
+    queue.pause();
+    //send message and delete after time
+    const msg = await interaction.channel.send({
+      content: 'Muzyka została zatrzymana',
+    });
+    functions.del(msg);
+    return;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export { create, invoke };
